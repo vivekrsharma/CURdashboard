@@ -307,7 +307,7 @@ func sendMetric(svc *cloudwatch.CloudWatch, data AthenaResponse, cwNameSpace str
 		var t time.Time
 		if interval == "hourly" {
 			t, _ = time.Parse("2006-01-02T15", data.Rows[row]["date"])
-		} else if interval = "daily" {
+		} else if interval == "daily" {
 			t, _ = time.Parse("2006-01-02", data.Rows[row]["date"])
 		} else {
 			t, _ = time.Parse("2006-01", data.Rows[row]["date"])
