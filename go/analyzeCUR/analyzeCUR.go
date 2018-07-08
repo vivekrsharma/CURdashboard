@@ -52,6 +52,7 @@ type Metric struct {
 	Enabled     bool
 	Hourly      bool
 	Daily       bool
+	Monthly     bool
 	Type        string
 	SQL         string
 	CwName      string
@@ -306,8 +307,10 @@ func sendMetric(svc *cloudwatch.CloudWatch, data AthenaResponse, cwNameSpace str
 		var t time.Time
 		if interval == "hourly" {
 			t, _ = time.Parse("2006-01-02T15", data.Rows[row]["date"])
-		} else {
+		} else if interval = "daily" {
 			t, _ = time.Parse("2006-01-02", data.Rows[row]["date"])
+		} else {
+			t, _ = time.Parse("2006-01", data.Rows[row]["date"])
 		}
 
 		v, _ := strconv.ParseFloat(data.Rows[row]["value"], 64)
@@ -790,6 +793,9 @@ func main() {
 			}
 			if conf.Metrics[metric].Daily {
 				jobs <- job{svcAthena, conf.Athena.DbName, account, meta["region"].(string), "daily", conf.Metrics[metric]}
+			}
+			if conf.Metrics[metric].Monthly {
+				jobs <- job{svcAthena, conf.Athena.DbName, account, meta["region"].(string), "monthly", conf.Metrics[metric]}
 			}
 		}
 	}
