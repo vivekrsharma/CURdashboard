@@ -87,7 +87,7 @@ End of configuraton structs
 */
 
 var defaultConfigPath = "./analyzeCUR.config"
-var maxConcurrentQueries = 5
+var maxConcurrentQueries = 20
 
 func getInstanceMetadata(sess *session.Session) map[string]interface{} {
 	c := &http.Client{
