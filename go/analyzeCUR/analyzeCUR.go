@@ -88,7 +88,7 @@ End of configuraton structs
 */
 
 var defaultConfigPath = "./analyzeCUR.config"
-var maxConcurrentQueries = 20
+var maxConcurrentQueries = 5
 
 func getInstanceMetadata(sess *session.Session) map[string]interface{} {
 	c := &http.Client{
@@ -237,7 +237,7 @@ func sendQuery(svc *athena.Athena, db string, sql string, account string, region
 	}
 
 	if *qrop.QueryExecution.Status.State != "SUCCEEDED" {
-		return results, errors.New("Error Querying Athena, completion state is NOT SUCCEEDED, state is: " + *qrop.QueryExecution.Status.State)
+		return results, errors.New("Error Querying Athena, completion state is NOT SUCCEEDED, QueryExecution is: " + qrop.QueryExecution.GoString())
 	}
 
 	var ip athena.GetQueryResultsInput
@@ -647,7 +647,7 @@ func processCUR(sourceBucket string, reportName string, reportPath string, destP
 		cc.SetDestPath(destPathFull)
 	}
 
-	// Convert CUR
+  // Convert CUR
 	if err := cc.ConvertCur(); err != nil {
 		return nil, "", "", errors.New("Could not convert CUR: " + err.Error())
 	}
